@@ -4,8 +4,8 @@
 
 Facebook, Inc.                                              B. Hill, Ed.
 Unofficial Draft                                            Facebook, Inc.
-                                                            October 26, 2017
-Expires: April 29, 2018
+                                                            February 17, 2018
+Expires: August 21, 2018
 
 
                        Delegated Account Recovery
@@ -20,13 +20,14 @@ Abstract
 
 Status of This Memo
 
-   This Unofficial Draft will expire on April 29, 2018.
+   This Unofficial Draft will expire on August 21, 2018.
 
 Copyright Notice
 
-   Copyright (c) 2016-2017 Facebook, Inc. and the persons identified as
+   Copyright (c) 2016-2018 Facebook, Inc. and the persons identified as
    the document authors and published under the Creative Commons 
    Attribution 4.0 International license.
+
 
 Table of Contents
 
@@ -68,25 +69,26 @@ Table of Contents
      4.2.  Counter-Signed Recovery Token
        4.2.1.  Internal Structure
        4.2.2.  Counter-Signed Recovery Token Signature
-   5.  Use in Key Recovery
-   6.  Security Considerations
-     6.1.  Deterministic Use of ECDSA
-     6.2.  User Notification
-     6.3.  Additional Verification
-       6.3.1.  At the Recovery Provider
-       6.3.2.  At the Account Provider
-     6.4.  Low Friction Tokens and Delegated Multi-Factor
+   5.  Special Processing Instructions for iOS
+   6.  Use in Key Recovery
+   7.  Security Considerations
+     7.1.  Deterministic Use of ECDSA
+     7.2.  User Notification
+     7.3.  Additional Verification
+       7.3.1.  At the Recovery Provider
+       7.3.2.  At the Account Provider
+     7.4.  Low Friction Tokens and Delegated Multi-Factor
            Authentication
-     6.5.  Cross-Site Request Forgery
-     6.6.  Breach Detection
-     6.7.  Clock Skew
-     6.8.  Key Loss and Compromise
-     6.9.  TLS or HTTPS Certificate Compromise
-     6.10. Token Leakage
-   7.  Implementation Notes
-   8.  IANA Considerations
-   9.  Acknowledgements
-   10. Normative References
+     7.5.  Cross-Site Request Forgery
+     7.6.  Breach Detection
+     7.7.  Clock Skew
+     7.8.  Key Loss and Compromise
+     7.9.  TLS or HTTPS Certificate Compromise
+     7.10. Token Leakage
+   8.  Implementation Notes
+   9.  IANA Considerations
+   10. Acknowledgements
+   11. Normative References
    Appendix A.  Initial Algorithm Registry Contents
    Author's Address
 
@@ -582,7 +584,17 @@ Table of Contents
    "app".  Generally, as the protocol aims to coordinate between
    authenticated sessions at multiple service providers, the platform
    standard web browser is the most standardized and convenient
-   mechanism available and should be preferred.
+   mechanism available and should be preferred, for example, using
+   "Chrome Custom Tabs" on Android.  Webview components in which the
+   browser DOM and cookie store are under the control of the invoking
+   app should be avoided and may be rejected by Recovery Providers.
+
+   Apple's iOS operating system, beginning with version 11, provides
+   only an extremely limited capability to share state among
+   applications and the web through the SFAuthenticationSession API.
+   Special processing is required by both Account Providers and Recovery
+   Providers to support Account Provider's use of native iOS apps as
+   detailed below.
 
 2.  Fetching Configuration
 
@@ -1198,6 +1210,10 @@ Table of Contents
    cryptographic key recovery ceremony, it may be necessary to select a
    specific token among several the user has saved from a given issuer.
 
+   The request MAY contain an additional parameter 'state', the value of
+   which will be passed to the 'recover-account-return' endpoint,
+   unmodified.
+
    Upon receiving an invocation of the Recover Account endpoint the
    Recovery Provider takes the following processing steps:
 
@@ -1219,11 +1235,15 @@ Table of Contents
        x-www-form-urlencoded" formatted POST body should include the
        parameter "countersigned-token" set to the countersigned token.
 
-   6.  The Recovery Provider should notify the user, via an out-of-band
+   6.  If a 'state' parameter was included with the original request,
+       send its value, unmodified, as an additional parameter in the
+       POST body.
+
+   7.  The Recovery Provider should notify the user, via an out-of-band
        means, that a recovery token has been exercised, for which domain
        and nickname, if applicable.
 
-   7.  If any of these steps fails, abort the algorithm.
+   8.  If any of these steps fails, abort the algorithm.
 
 3.5.  Recover Account Return Endpoint
 
@@ -1485,8 +1505,7 @@ Table of Contents
        Length of the binding.
 
    binding
-       Opaque token binding identifier obtained from the get-token
-       endpoint.
+       Opaque token binding identifier.
 
 4.1.2.  Opaque Data
 
@@ -1634,7 +1653,73 @@ Table of Contents
    signature is encoded as DER-encoded ASN.1 structure (a SEQUENCE of
    two INTEGERs, for r and s, in that order)
 
-5.  Use in Key Recovery
+5.  Special Processing Instructions for iOS
+
+   This protocol works by transitioning users smoothly between contexts
+   in which they have a stateful session with both the Account and
+   Recovery Provider, which occupy different security domains.  This is
+   possible due to the Same Origin Policy isolation available on the Web
+   platform, and that platform can be accessed or switched from the
+   context of a native application relatively easily on many platforms.
+
+   Beginning with version 11, Apple's iOS places severe restrictions on
+   shared state between native apps and any other security domain.  The
+   SFAuthenticationSession API provides the only means of doing this,
+   allows access to cookies only from a single domain, requires that
+   that domain be entered directly through a GET from the app, and that
+   callbacks be dynamically provided using non-http(s) schemes.  This
+   requires that both Account Providers and Recovery Providers make the
+   following changes to the protocol and processing instructions for
+   users with an Account Provider relationship that happens in the
+   context of an iOS app.
+
+   GET at save-token endpoint
+       As apps must initiate user access to the Recovery Provider's
+       website with a GET when using the SFAuthenticationSession API,
+       the Recovery Provider MUST accept use of the GET method at the
+       "save-token" endpoint.  Recovery Providers SHOULD only accept GET
+       if the HTTP User-Agent string is as expected for an
+       SFAuthenticationSession.  This does not provide additional
+       security for those sessions, as this string can be spoofed by an
+       app-controlled web view, but it prevents abuse and accidental
+       misconfiguration of the endpoint as used by standalone web
+       browsers.
+
+   Dynamic callback parameter for save-token  When invoking "save-token"
+       from SFAuthenticationSession, Account Providers MUST provide and
+       Recovery Providers MUST make use of, an additional GET parameter,
+       "sfas_callback".  The value of this parameter MUST be a URL with
+       a scheme component that is not "http" or "https".  As with
+       allowing GET, Recovery Providers SHOULD only accept this
+       parameter when the HTTP User-Agent string is as expected for
+       SFAuthenticationSession.  Use of a dynamic callback in this
+       instance is safe because only the status is returned, not the
+       token itself, and the non-http scheme should prevent leakage of
+       the original GET parameters in the HTTP Referer header.
+
+   Requirement for a web server implementation of save-token-return
+       Perhaps the most important security property of the protocol is
+       that fresh countersigned recovery tokens not leak to unauthorized
+       parties in a way that they are subject to forwarding attacks.
+       Returning the countersigned token as a GET parameter to an
+       arbitrary endpoint, supplied in-band, would allow rogue apps to
+       intercept countersigned tokens and forward them to the POST
+       endpoint of the Account Provider.  In order to avoid introducing
+       this potential vulnerability into all "recover-account-return"
+       endpoints, iOS apps must still involve a web server under their
+       control in the account recovery process.  It is recommended that
+       the app encode the SFAuthenticationCallback into the 'state'
+       parameter sent to the "recover-account" invocation.  This value
+       will be passed, unmodified, in the https POST to the "recover-
+       account-return" endpoint at the Account Provider.  The Account
+       Provider's web server can then verify the countersigned token,
+       examine the callback URL encoded in the 'state' parameter and, if
+       it deems it legitmate, invoke it with additional parameter(s)
+       that encode a session token or the identity claims necessary to
+       initiate a new user session or password reset in the client iOS
+       app.  The details of this invocation are application specific.
+
+6.  Use in Key Recovery
 
    This protocol, in addition to allowing recovery of accounts in a
    delegated fashion, may be used to recover other capabilities, like a
@@ -1646,16 +1731,16 @@ Table of Contents
    can still recover it, but the backup is not subject to server-side
    compromise by any single entity.
 
-6.  Security Considerations
+7.  Security Considerations
 
-6.1.  Deterministic Use of ECDSA
+7.1.  Deterministic Use of ECDSA
 
-   As even slight biases in the selection of the random value k used by
+   Even slight biases in the selection of the random value k used by
    ECDSA can lead to a key compromise.  As such, implementers SHOULD
    follow the method described in [RFC5246] for generating deterministic
    values of k.
 
-6.2.  User Notification
+7.2.  User Notification
 
    Users should be notified, by both the Recovery Provider and Account
    Provider, whenever a recovery capability is exercised, in order to
@@ -1664,9 +1749,9 @@ Table of Contents
    preferred to reduce the opportunity for an attacker in control of a
    user's account to remove such signals.
 
-6.3.  Additional Verification
+7.3.  Additional Verification
 
-6.3.1.  At the Recovery Provider
+7.3.1.  At the Recovery Provider
 
    An explicit goal of this specification is that account recovery
    operations can be explicitly recognized as high-risk operations and
@@ -1676,7 +1761,7 @@ Table of Contents
    confidence in the user's authentication to perform it.  The nature of
    this is application-specific at each Recovery Provider.
 
-6.3.1.1.  Session Fixation
+7.3.1.1.  Session Fixation
 
    To achieve a convenient and privacy-preserving user experience many
    Recovery Providers will rely on the ambient authority of the user's
@@ -1696,7 +1781,7 @@ Table of Contents
    accounts, and require additional confirmation that the user is aware
    of the current logged in user state before saving a recovery token.
 
-6.3.2.  At the Account Provider
+7.3.2.  At the Account Provider
 
    This specification does not mandate that a counter-signed recovery
    token be the exclusive means by which an Account Provider allows
@@ -1727,7 +1812,7 @@ Table of Contents
    recovery tokens that may have been issued during the compromise
    period.
 
-6.4.  Low Friction Tokens and Delegated Multi-Factor Authentication
+7.4.  Low Friction Tokens and Delegated Multi-Factor Authentication
 
    Generally, recovering an account is a high-security event, and a key
    advantage of this protocol is that it identifies recoveries
@@ -1766,7 +1851,7 @@ Table of Contents
    completed, the Recovery Provider should not issue a Countersigned
    Token.
 
-6.5.  Cross-Site Request Forgery
+7.5.  Cross-Site Request Forgery
 
    Many web application endpoints require an unforgeable token be sent
    as part of any HTTP POST to prevent Cross-Site Request Forgery (CSRF)
@@ -1790,7 +1875,7 @@ Table of Contents
    require unforgeable user consent or block entirely the delegation of
    tokens to low-reputation Recovery Providers.
 
-6.6.  Breach Detection
+7.6.  Breach Detection
 
    Participants should monitor rates at which recovery capabilities are
    exercised and rates at which users report unauthorized exercising of
@@ -1802,7 +1887,7 @@ Table of Contents
    should also be performed to prevent disclosed tokens from being re-
    associated to new accounts at a Recovery Provider.
 
-6.7.  Clock Skew
+7.7.  Clock Skew
 
    This protocol relies on comparison of timestamps from different
    network servers as a defense-in-depth measure to prevent re-use of
@@ -1817,7 +1902,7 @@ Table of Contents
    with standardized Internet time sources.  The specifics of such
    mechanisms are beyond the scope of this document.
 
-6.8.  Key Loss and Compromise
+7.8.  Key Loss and Compromise
 
    This protocol involves three keys: the public/private key pairs of
    the Account and Recovery Providers, and whatever key the Account
@@ -1865,7 +1950,7 @@ Table of Contents
    If an Account Provider loses its data encryption keys, tokens issued
    under those keys will be unusable.
 
-6.9.  TLS or HTTPS Certificate Compromise
+7.9.  TLS or HTTPS Certificate Compromise
 
    This protocol depends on TLS, HTTPS and the Web PKI to bootstrap its
    self-organizing trust framework using HTTPS to distribute keys.
@@ -1884,7 +1969,7 @@ Table of Contents
    connections that are beyond the scope of this document, such as HTTP
    Public Key Pinning [RFC7469] and Certificate Transparency.  [RFC6962]
 
-6.10.  Token Leakage
+7.10.  Token Leakage
 
    It may be possible that recovery tokens leak to third parties.  Use
    of the POST method and endpoints which are either well-known or
@@ -1897,7 +1982,7 @@ Table of Contents
 
    Use of a token binding can reduce these risks.
 
-7.  Implementation Notes
+8.  Implementation Notes
 
    This section is non-normative.
 
@@ -1917,17 +2002,17 @@ Table of Contents
 61, 3, 1, 7, 3, 66, 0]
 
 
-8.  IANA Considerations
+9.  IANA Considerations
 
    Future revisions to this protocol may use a registry to map supported
    cryptographic algorithms to the token version indiator.
 
-9.  Acknowledgements
+10.  Acknowledgements
 
    The author would like to thank Andrey Labunets, Neil Matatall and
    Patrick Toomey for their valuable contributions.
 
-10.  Normative References
+11.  Normative References
 
    [ISO.8601.1988]
               International Organization for Standardization, "Data

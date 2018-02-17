@@ -36,9 +36,9 @@
         <email>hillbrad@fb.com</email>
       </address>
     </author>
-    <date year="2017"
-          month="October"
-          day="26" />
+    <date year="2018"
+          month="February"
+          day="17" />
     <workgroup>Facebook, Inc.</workgroup>
     <abstract>
       <t>Delegated Account Recovery allows an application to delegate the
@@ -515,7 +515,15 @@
         "app".  Generally, as the protocol aims to coordinate between
         authenticated sessions at multiple service providers, the platform
         standard web browser is the most standardized and convenient mechanism
-        available and should be preferred.</t>
+        available and should be preferred, for example, using "Chrome Custom Tabs"
+        on Android.  Webview components in which the browser DOM and cookie store
+        are under the control of the invoking app should be avoided and may
+        be rejected by Recovery Providers.</t>
+        <t>Apple's iOS operating system, beginning with version 11, provides
+        only an extremely limited capability to share state among applications
+        and the web through the SFAuthenticationSession API. Special processing
+        is required by both Account Providers and Recovery Providers to support
+        Account Provider's use of native iOS apps as detailed below.</t>
       </section>
       <!-- Application User Agents -->
     </section>
@@ -719,12 +727,12 @@
         set to the value 'required', this indicates to the Recovery Provider
         that it SHOULD show some form of interstitial explicitly informing
         the user that a token will be saved, with the option to decline.</t>
-				<t>The POST body type MAY contain an additional parameter, 'obsoletes'.
-				The value of the 'obsoletes' is a token id which the current
-				token is intended to replace.  If the user at the Recovery Provider
-				has a saved token with an id and issuer matching this property,
-				it should be deleted or marked as invalid if the new token is
-				successfully saved.</t>
+        <t>The POST body type MAY contain an additional parameter, 'obsoletes'.
+        The value of the 'obsoletes' is a token id which the current
+        token is intended to replace.  If the user at the Recovery Provider
+        has a saved token with an id and issuer matching this property,
+        it should be deleted or marked as invalid if the new token is
+        successfully saved.</t>
         <t>The POST body MAY contain an additional parameter 'state', the
         value of which will be passed to the 'save-token-return' endpoint,
         unmodified.</t>
@@ -906,12 +914,12 @@
             <t>This message type MAY contain an additional property 'state'
             which will be passed, unmodified, as part of the redirect to the
             'save-token-return' endpoint.</t>
-						<t>This message type MAY contain an additional property, 'obsoletes'.
-						The value of the 'obsoletes' property is a token id which the current
-						token is intended to replace.  If the user at the Recovery Provider
-						has a saved token with an id and issuer matching this property,
-						it should be deleted or marked as invalid if the new token is
-						successfully saved.</t>
+            <t>This message type MAY contain an additional property, 'obsoletes'.
+            The value of the 'obsoletes' property is a token id which the current
+            token is intended to replace.  If the user at the Recovery Provider
+            has a saved token with an id and issuer matching this property,
+            it should be deleted or marked as invalid if the new token is
+            successfully saved.</t>
             <t>If no other keys are set on the message, the behavior
             of the Recovery Provider iframe will be to process the message and
             navigate the parent frame based on the results of that
@@ -926,7 +934,7 @@
             with the provided 'state' parameter, whether successful or not.</t>
             <t>If the recovery token can be saved without user interaction,
             the iframe SHOULD navigate the parent frame directly to the Account 
-						Provider's save-token-return endpoint with the status
+            Provider's save-token-return endpoint with the status
             parameter set to 'save-success' and any 'state' parameter set.</t>
           </section>
           <!-- save-token message -->
@@ -975,18 +983,18 @@
             enrolled asynchronously.</t>
             <t>The value of the 'state' property on the message, if set, is ignored.</t>
           </section>
-	 			  <!-- save-token-async-only message -->
+          <!-- save-token-async-only message -->
           <section title="save-token-result message">
-						<t>This message is sent to the parent frame in response to a
-						'save-token-no-navigation' or 'save-token-async-only' message.</t>
+            <t>This message is sent to the parent frame in response to a
+            'save-token-no-navigation' or 'save-token-async-only' message.</t>
             <t>This message contains a 'result' property. If sent in response to
-						a 'save-token-no-navigation' message, the value of result will be either
-						'save-token-success' or 'save-token-failure', indicating whether the
-						token was saved without user interaction.  If sent in response to a
-						'save-token-async-only' message, the value is always 'done', indicating
-						when it is safe to navigate or otherwise destroy the iframe hosting the API.</t>
+            a 'save-token-no-navigation' message, the value of result will be either
+            'save-token-success' or 'save-token-failure', indicating whether the
+            token was saved without user interaction.  If sent in response to a
+            'save-token-async-only' message, the value is always 'done', indicating
+            when it is safe to navigate or otherwise destroy the iframe hosting the API.</t>
           </section>
-	 			  <!-- save-token-result message -->
+          <!-- save-token-result message -->
           <section title="get-binding message">
             <t>This message indicates a request for a token binding string from
               the Recovery Provider.  The reply contains a string that should be treated
@@ -1067,6 +1075,9 @@
         as part of a cryptographic key recovery ceremony, it may be necessary
         to select a specific token among several the user has saved from a
         given issuer.</t>
+        <t>The request MAY contain an additional parameter 'state', the
+        value of which will be passed to the 'recover-account-return' endpoint,
+        unmodified.</t>
         <t>Upon receiving an invocation of the Recover Account endpoint the
         Recovery Provider takes the following processing steps:
         <list style="numbers">
@@ -1084,6 +1095,9 @@
           "application/x-www-form-urlencoded" formatted POST body should
           include the parameter "countersigned-token" set to the
           countersigned token.</t>
+          <t>If a 'state' parameter was included with the original request,
+          send its value, unmodified, as an additional parameter in the
+          POST body.</t>
           <t>The Recovery Provider should notify the user, via an out-of-band
           means, that a recovery token has been exercised, for which domain
           and nickname, if applicable.</t>
@@ -1341,8 +1355,7 @@ token_internals = struct {
               <t hangText="binding_length">
               <vspace />Length of the binding.</t>
               <t hangText="binding">
-              <vspace />Opaque token binding identifier obtained from the
-              get-token endpoint.</t>
+              <vspace />Opaque token binding identifier.</t>
             </list>
           </t>
         </section>
@@ -1496,6 +1509,67 @@ countersigned_token_internals = struct {
       <!-- Counter-Signed Recovery Token -->
     </section>
     <!-- Token Generation -->
+    <section title="Special Processing Instructions for iOS">
+      <t>This protocol works by transitioning users smoothly between
+      contexts in which they have a stateful session with both the Account
+      and Recovery Provider, which occupy different security domains. This
+      is possible due to the Same Origin Policy isolation available on the
+      Web platform, and that platform can be accessed or switched from
+      the context of a native application relatively easily on many platforms.
+      </t>
+      <t>Beginning with version 11, Apple's iOS places severe restrictions on
+      shared state between native apps and any other security domain. The
+      SFAuthenticationSession API provides the only means of doing this,
+      allows access to cookies only from a single domain, requires that that
+      domain be entered directly through a GET from the app, and that callbacks
+      be dynamically provided using non-http(s) schemes.  This requires that
+      both Account Providers and Recovery Providers make the following changes
+      to the protocol and processing instructions for users with an Account
+      Provider relationship that happens in the context of an iOS app.</t>
+      <t><list style="hanging"
+            hangIndent="4">
+          <t hangText="GET at save-token endpoint">
+              <vspace />As apps must initiate user access to the Recovery Provider's
+              website with a GET when using the SFAuthenticationSession API, the Recovery Provider
+              MUST accept use of the GET method at the <spanx style="verb">save-token</spanx>
+              endpoint.  Recovery Providers SHOULD only accept GET if the HTTP User-Agent string
+              is as expected for an SFAuthenticationSession. This does not provide additional
+              security for those sessions, as this string can be spoofed by an app-controlled
+              web view, but it prevents abuse and accidental misconfiguration of the endpoint
+              as used by standalone web browsers.
+          </t>
+          <t hangText="Dynamic callback parameter for save-token">
+              When invoking <spanx style="verb">save-token</spanx> from SFAuthenticationSession,
+              Account Providers MUST provide and Recovery Providers MUST make use of, an additional
+              GET parameter, <spanx style="verb">sfas_callback</spanx>. The value of this parameter
+              MUST be a URL with a scheme component that is not "http" or "https".  As with allowing GET,
+              Recovery Providers SHOULD only accept this parameter when the HTTP User-Agent string
+              is as expected for SFAuthenticationSession. Use of a dynamic callback in this instance
+              is safe because only the status is returned, not the token itself, and the non-http
+              scheme should prevent leakage of the original GET parameters in the HTTP Referer header.
+          </t>
+          <t hangText="Requirement for a web server implementation of save-token-return">
+              <vspace />Perhaps the most important security property of the protocol is that
+              fresh countersigned recovery tokens not leak to unauthorized parties in a way that
+              they are subject to forwarding attacks. Returning the countersigned token as
+              a GET parameter to an arbitrary endpoint, supplied in-band, would allow rogue apps to
+              intercept countersigned tokens and forward them to the POST endpoint of the
+              Account Provider. In order to avoid introducing this potential vulnerability into all
+              <spanx style="verb">recover-account-return</spanx> endpoints, iOS apps must still
+              involve a web server under their control in the account recovery process.
+              It is recommended that the app encode the SFAuthenticationCallback into the 'state'
+              parameter sent to the <spanx style="verb">recover-account</spanx> invocation.
+              This value will be passed, unmodified, in the https POST to the
+              <spanx style="verb">recover-account-return</spanx> endpoint at the Account Provider.
+              The Account Provider's web server can then verify the countersigned token,
+              examine the callback URL encoded in the 'state' parameter and, if it deems it legitmate,
+              invoke it with additional parameter(s) that encode a session token or the identity claims
+              necessary to initiate a new user session or password reset in the client iOS app.  The details
+              of this invocation are application specific.
+          </t>
+        </list></t>
+    </section>
+    <!-- Special Processing Instructions for iOS -->
     <section title="Use in Key Recovery">
       <t>This protocol, in addition to allowing recovery of accounts in a
       delegated fashion, may be used to recover other capabilities, like a
@@ -1510,7 +1584,7 @@ countersigned_token_internals = struct {
     <!-- Use in Key Escrow and Recovery -->
     <section title="Security Considerations">
       <section title="Deterministic Use of ECDSA">
-        <t>As even slight biases in the selection of the random value k used by
+        <t>Even slight biases in the selection of the random value k used by
         ECDSA can lead to a key compromise.  As such, implementers SHOULD
         follow the method described in <xref target="RFC5246"></xref> for
         generating deterministic values of k.</t>

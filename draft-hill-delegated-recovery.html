@@ -412,24 +412,25 @@
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Counter-Signed Recovery Token">
 <link href="#rfc.section.4.2.1" rel="Chapter" title="4.2.1 Internal Structure">
 <link href="#rfc.section.4.2.2" rel="Chapter" title="4.2.2 Counter-Signed Recovery Token Signature">
-<link href="#rfc.section.5" rel="Chapter" title="5 Use in Key Recovery">
-<link href="#rfc.section.6" rel="Chapter" title="6 Security Considerations">
-<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Deterministic Use of ECDSA">
-<link href="#rfc.section.6.2" rel="Chapter" title="6.2 User Notification">
-<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Additional Verification">
-<link href="#rfc.section.6.3.1" rel="Chapter" title="6.3.1 At the Recovery Provider">
-<link href="#rfc.section.6.3.2" rel="Chapter" title="6.3.2 At the Account Provider">
-<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Low Friction Tokens and Delegated Multi-Factor Authentication">
-<link href="#rfc.section.6.5" rel="Chapter" title="6.5 Cross-Site Request Forgery">
-<link href="#rfc.section.6.6" rel="Chapter" title="6.6 Breach Detection">
-<link href="#rfc.section.6.7" rel="Chapter" title="6.7 Clock Skew">
-<link href="#rfc.section.6.8" rel="Chapter" title="6.8 Key Loss and Compromise">
-<link href="#rfc.section.6.9" rel="Chapter" title="6.9 TLS or HTTPS Certificate Compromise">
-<link href="#rfc.section.6.10" rel="Chapter" title="6.10 Token Leakage">
-<link href="#rfc.section.7" rel="Chapter" title="7 Implementation Notes">
-<link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations">
-<link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgements">
-<link href="#rfc.references" rel="Chapter" title="10 Normative References">
+<link href="#rfc.section.5" rel="Chapter" title="5 Special Processing Instructions for iOS">
+<link href="#rfc.section.6" rel="Chapter" title="6 Use in Key Recovery">
+<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Deterministic Use of ECDSA">
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 User Notification">
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Additional Verification">
+<link href="#rfc.section.7.3.1" rel="Chapter" title="7.3.1 At the Recovery Provider">
+<link href="#rfc.section.7.3.2" rel="Chapter" title="7.3.2 At the Account Provider">
+<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Low Friction Tokens and Delegated Multi-Factor Authentication">
+<link href="#rfc.section.7.5" rel="Chapter" title="7.5 Cross-Site Request Forgery">
+<link href="#rfc.section.7.6" rel="Chapter" title="7.6 Breach Detection">
+<link href="#rfc.section.7.7" rel="Chapter" title="7.7 Clock Skew">
+<link href="#rfc.section.7.8" rel="Chapter" title="7.8 Key Loss and Compromise">
+<link href="#rfc.section.7.9" rel="Chapter" title="7.9 TLS or HTTPS Certificate Compromise">
+<link href="#rfc.section.7.10" rel="Chapter" title="7.10 Token Leakage">
+<link href="#rfc.section.8" rel="Chapter" title="8 Implementation Notes">
+<link href="#rfc.section.9" rel="Chapter" title="9 IANA Considerations">
+<link href="#rfc.section.10" rel="Chapter" title="10 Acknowledgements">
+<link href="#rfc.references" rel="Chapter" title="11 Normative References">
 <link href="#rfc.appendix.A" rel="Chapter" title="A Initial Algorithm Registry Contents">
 <link href="#rfc.authors" rel="Chapter">
 
@@ -439,7 +440,7 @@
 
   <meta name="dct.creator" content="Hill, B., Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-hill-delegated-recovery" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-10-26" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-2-17" />
   <meta name="dct.abstract" content="Delegated Account Recovery allows an application to delegate the capability to recover an account (e.g. in the event of a credential loss or compromise) to an account controlled by the same user or entity at a third party service provider." />
   <meta name="description" content="Delegated Account Recovery allows an application to delegate the capability to recover an account (e.g. in the event of a credential loss or compromise) to an account controlled by the same user or entity at a third party service provider." />
 
@@ -460,10 +461,10 @@
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">October 26, 2017</td>
+<td class="right">February 17, 2018</td>
 </tr>
 <tr>
-<td class="left">Expires: April 29, 2018</td>
+<td class="left">Expires: August 21, 2018</td>
 <td class="right"></td>
 </tr>
 
@@ -477,9 +478,9 @@
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>Delegated Account Recovery allows an application to delegate the capability to recover an account (e.g. in the event of a credential loss or compromise) to an account controlled by the same user or entity at a third party service provider.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
-<p>This Unofficial Draft will expire on April 29, 2018.</p>
+<p>This Unofficial Draft will expire on August 21, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2016-2017 Facebook, Inc. and the persons identified as the document authors and
+<p>Copyright (c) 2016-2018 Facebook, Inc. and the persons identified as the document authors and
 published under the Creative Commons Attribution 4.0 International license.</p>
   
   <hr class="noprint" />
@@ -562,41 +563,43 @@ published under the Creative Commons Attribution 4.0 International license.</p>
 </li>
 <li>4.2.2.   <a href="#rfc.section.4.2.2">Counter-Signed Recovery Token Signature</a>
 </li>
-</ul></ul><li>5.   <a href="#rfc.section.5">Use in Key Recovery</a>
+</ul></ul><li>5.   <a href="#rfc.section.5">Special Processing Instructions for iOS</a>
 </li>
-<li>6.   <a href="#rfc.section.6">Security Considerations</a>
+<li>6.   <a href="#rfc.section.6">Use in Key Recovery</a>
 </li>
-<ul><li>6.1.   <a href="#rfc.section.6.1">Deterministic Use of ECDSA</a>
+<li>7.   <a href="#rfc.section.7">Security Considerations</a>
 </li>
-<li>6.2.   <a href="#rfc.section.6.2">User Notification</a>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Deterministic Use of ECDSA</a>
 </li>
-<li>6.3.   <a href="#rfc.section.6.3">Additional Verification</a>
+<li>7.2.   <a href="#rfc.section.7.2">User Notification</a>
 </li>
-<ul><li>6.3.1.   <a href="#rfc.section.6.3.1">At the Recovery Provider</a>
+<li>7.3.   <a href="#rfc.section.7.3">Additional Verification</a>
 </li>
-<li>6.3.2.   <a href="#rfc.section.6.3.2">At the Account Provider</a>
+<ul><li>7.3.1.   <a href="#rfc.section.7.3.1">At the Recovery Provider</a>
 </li>
-</ul><li>6.4.   <a href="#rfc.section.6.4">Low Friction Tokens and Delegated Multi-Factor Authentication</a>
+<li>7.3.2.   <a href="#rfc.section.7.3.2">At the Account Provider</a>
 </li>
-<li>6.5.   <a href="#rfc.section.6.5">Cross-Site Request Forgery</a>
+</ul><li>7.4.   <a href="#rfc.section.7.4">Low Friction Tokens and Delegated Multi-Factor Authentication</a>
 </li>
-<li>6.6.   <a href="#rfc.section.6.6">Breach Detection</a>
+<li>7.5.   <a href="#rfc.section.7.5">Cross-Site Request Forgery</a>
 </li>
-<li>6.7.   <a href="#rfc.section.6.7">Clock Skew</a>
+<li>7.6.   <a href="#rfc.section.7.6">Breach Detection</a>
 </li>
-<li>6.8.   <a href="#rfc.section.6.8">Key Loss and Compromise</a>
+<li>7.7.   <a href="#rfc.section.7.7">Clock Skew</a>
 </li>
-<li>6.9.   <a href="#rfc.section.6.9">TLS or HTTPS Certificate Compromise</a>
+<li>7.8.   <a href="#rfc.section.7.8">Key Loss and Compromise</a>
 </li>
-<li>6.10.   <a href="#rfc.section.6.10">Token Leakage</a>
+<li>7.9.   <a href="#rfc.section.7.9">TLS or HTTPS Certificate Compromise</a>
 </li>
-</ul><li>7.   <a href="#rfc.section.7">Implementation Notes</a>
+<li>7.10.   <a href="#rfc.section.7.10">Token Leakage</a>
 </li>
-<li>8.   <a href="#rfc.section.8">IANA Considerations</a>
+</ul><li>8.   <a href="#rfc.section.8">Implementation Notes</a>
 </li>
-<li>9.   <a href="#rfc.section.9">Acknowledgements</a>
+<li>9.   <a href="#rfc.section.9">IANA Considerations</a>
 </li>
-<li>10.   <a href="#rfc.references">Normative References</a>
+<li>10.   <a href="#rfc.section.10">Acknowledgements</a>
+</li>
+<li>11.   <a href="#rfc.references">Normative References</a>
 </li>
 <li>Appendix A.   <a href="#rfc.appendix.A">Initial Algorithm Registry Contents</a>
 </li>
@@ -859,7 +862,8 @@ published under the Creative Commons Attribution 4.0 International license.</p>
 <p id="rfc.section.1.8.p.2">When retrieving configuration servers SHOULD NOT follow redirects to reduce the risk of Server Side Request Forgery.</p>
 <h1 id="rfc.section.1.9">
 <a href="#rfc.section.1.9">1.9.</a> Application User Agents</h1>
-<p id="rfc.section.1.9.p.1">This specification is written primarily for a general purpose web browser as user agent but this is not the only possible implementation choice. On some platforms, some of either or both of the Account Provider and Recovery Provider functionality may be provided as part of a dedicated, platform-native application, AKA an "app".  Generally, as the protocol aims to coordinate between authenticated sessions at multiple service providers, the platform standard web browser is the most standardized and convenient mechanism available and should be preferred.</p>
+<p id="rfc.section.1.9.p.1">This specification is written primarily for a general purpose web browser as user agent but this is not the only possible implementation choice. On some platforms, some of either or both of the Account Provider and Recovery Provider functionality may be provided as part of a dedicated, platform-native application, AKA an "app".  Generally, as the protocol aims to coordinate between authenticated sessions at multiple service providers, the platform standard web browser is the most standardized and convenient mechanism available and should be preferred, for example, using "Chrome Custom Tabs" on Android.  Webview components in which the browser DOM and cookie store are under the control of the invoking app should be avoided and may be rejected by Recovery Providers.</p>
+<p id="rfc.section.1.9.p.2">Apple's iOS operating system, beginning with version 11, provides only an extremely limited capability to share state among applications and the web through the SFAuthenticationSession API. Special processing is required by both Account Providers and Recovery Providers to support Account Provider's use of native iOS apps as detailed below.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> Fetching Configuration</h1>
 <p id="rfc.section.2.p.1">Fetching Configuration is the process of determining the protocol endpoints and public keys used by Account Providers and Recovery Providers.</p>
@@ -1112,7 +1116,8 @@ published under the Creative Commons Attribution 4.0 International license.</p>
 </ul>
 <p id="rfc.section.3.4.p.3">Recover Account endpoints MUST support both the HTTP GET and POST methods.</p>
 <p id="rfc.section.3.4.p.4">A query string or <samp>application/x-www-form-urlencoded</samp> formatted POST body MAY be provided. If a query string is provided, it MAY contain the parameter <samp>issuer</samp> set to the origin of the Account Provider and/or a <samp>id</samp> parameter set to the hex value of a token_id. These parameters can be used by the Recovery Provider to guide the user in selecting the correct token. For example, if used as part of a cryptographic key recovery ceremony, it may be necessary to select a specific token among several the user has saved from a given issuer.</p>
-<p id="rfc.section.3.4.p.5">Upon receiving an invocation of the Recover Account endpoint the Recovery Provider takes the following processing steps: </p>
+<p id="rfc.section.3.4.p.5">The request MAY contain an additional parameter 'state', the value of which will be passed to the 'recover-account-return' endpoint, unmodified.</p>
+<p id="rfc.section.3.4.p.6">Upon receiving an invocation of the Recover Account endpoint the Recovery Provider takes the following processing steps: </p>
 
 <ol>
 <li>Authenticate the user. The exact nature of how the Recovery Provider authenticates the user is beyond the scope of this specification.</li>
@@ -1120,6 +1125,7 @@ published under the Creative Commons Attribution 4.0 International license.</p>
 <li>Retrieve the configuration for the token issuer as described in Section 2.</li>
 <li>Create a counter-signed token as described in Section 4 and sign the token according to the algorithm's requirement.</li>
 <li>Redirect the user agent to the "recover-account-return" endpoint defined by the Account Provider configuration. The "application/x-www-form-urlencoded" formatted POST body should include the parameter "countersigned-token" set to the countersigned token.</li>
+<li>If a 'state' parameter was included with the original request, send its value, unmodified, as an additional parameter in the POST body.</li>
 <li>The Recovery Provider should notify the user, via an out-of-band means, that a recovery token has been exercised, for which domain and nickname, if applicable.</li>
 <li>If any of these steps fails, abort the algorithm.</li>
 </ol>
@@ -1277,7 +1283,7 @@ token_internals = struct {
 <br>Length of the binding.</dd>
 <dt>binding</dt>
 <dd style="margin-left: 4">
-<br>Opaque token binding identifier obtained from the get-token endpoint.</dd>
+<br>Opaque token binding identifier.</dd>
 </dl>
 
 <p> </p>
@@ -1389,83 +1395,99 @@ countersigned_token_internals = struct {
 <p id="rfc.section.4.2.2.p.1">countersigned_token_signature is a signature over the countersigned_token_internals octet string as defined according to the algorithm field, with the private key corresponding to the public key for the Recovery Provider currently published as part of its configuration.</p>
 <p id="rfc.section.4.2.2.p.2">For this version of the protocol (0), the algorithm is ECDSA over the SHA256 hash of the countersigned_token_internals octet string. The signature is encoded as DER-encoded ASN.1 structure (a SEQUENCE of two INTEGERs, for r and s, in that order)</p>
 <h1 id="rfc.section.5">
-<a href="#rfc.section.5">5.</a> Use in Key Recovery</h1>
-<p id="rfc.section.5.p.1">This protocol, in addition to allowing recovery of accounts in a delegated fashion, may be used to recover other capabilities, like a recovery key for encrypted email or files. For example, the provider of a an encryption service might use a threshold cryptosystem to break a key into several parts, and ask the user to store the pieces (encoded in the opaque data field) as account recovery tokens at several providers. If the user loses their own copy of the key, they can still recover it, but the backup is not subject to server-side compromise by any single entity.</p>
+<a href="#rfc.section.5">5.</a> Special Processing Instructions for iOS</h1>
+<p id="rfc.section.5.p.1">This protocol works by transitioning users smoothly between contexts in which they have a stateful session with both the Account and Recovery Provider, which occupy different security domains. This is possible due to the Same Origin Policy isolation available on the Web platform, and that platform can be accessed or switched from the context of a native application relatively easily on many platforms.  </p>
+<p id="rfc.section.5.p.2">Beginning with version 11, Apple's iOS places severe restrictions on shared state between native apps and any other security domain. The SFAuthenticationSession API provides the only means of doing this, allows access to cookies only from a single domain, requires that that domain be entered directly through a GET from the app, and that callbacks be dynamically provided using non-http(s) schemes.  This requires that both Account Providers and Recovery Providers make the following changes to the protocol and processing instructions for users with an Account Provider relationship that happens in the context of an iOS app.</p>
+<p></p>
+
+<dl>
+<dt>GET at save-token endpoint</dt>
+<dd style="margin-left: 4">
+<br>As apps must initiate user access to the Recovery Provider's website with a GET when using the SFAuthenticationSession API, the Recovery Provider MUST accept use of the GET method at the <samp>save-token</samp> endpoint.  Recovery Providers SHOULD only accept GET if the HTTP User-Agent string is as expected for an SFAuthenticationSession. This does not provide additional security for those sessions, as this string can be spoofed by an app-controlled web view, but it prevents abuse and accidental misconfiguration of the endpoint as used by standalone web browsers.  </dd>
+<dt>Dynamic callback parameter for save-token</dt>
+<dd style="margin-left: 4">When invoking <samp>save-token</samp> from SFAuthenticationSession, Account Providers MUST provide and Recovery Providers MUST make use of, an additional GET parameter, <samp>sfas_callback</samp>. The value of this parameter MUST be a URL with a scheme component that is not "http" or "https".  As with allowing GET, Recovery Providers SHOULD only accept this parameter when the HTTP User-Agent string is as expected for SFAuthenticationSession. Use of a dynamic callback in this instance is safe because only the status is returned, not the token itself, and the non-http scheme should prevent leakage of the original GET parameters in the HTTP Referer header.  </dd>
+<dt>Requirement for a web server implementation of save-token-return</dt>
+<dd style="margin-left: 4">
+<br>Perhaps the most important security property of the protocol is that fresh countersigned recovery tokens not leak to unauthorized parties in a way that they are subject to forwarding attacks. Returning the countersigned token as a GET parameter to an arbitrary endpoint, supplied in-band, would allow rogue apps to intercept countersigned tokens and forward them to the POST endpoint of the Account Provider. In order to avoid introducing this potential vulnerability into all <samp>recover-account-return</samp> endpoints, iOS apps must still involve a web server under their control in the account recovery process.  It is recommended that the app encode the SFAuthenticationCallback into the 'state' parameter sent to the <samp>recover-account</samp> invocation.  This value will be passed, unmodified, in the https POST to the <samp>recover-account-return</samp> endpoint at the Account Provider.  The Account Provider's web server can then verify the countersigned token, examine the callback URL encoded in the 'state' parameter and, if it deems it legitmate, invoke it with additional parameter(s) that encode a session token or the identity claims necessary to initiate a new user session or password reset in the client iOS app.  The details of this invocation are application specific.  </dd>
+</dl>
 <h1 id="rfc.section.6">
-<a href="#rfc.section.6">6.</a> Security Considerations</h1>
-<h1 id="rfc.section.6.1">
-<a href="#rfc.section.6.1">6.1.</a> Deterministic Use of ECDSA</h1>
-<p id="rfc.section.6.1.p.1">As even slight biases in the selection of the random value k used by ECDSA can lead to a key compromise.  As such, implementers SHOULD follow the method described in <a href="#RFC5246" class="xref">[RFC5246]</a> for generating deterministic values of k.</p>
-<h1 id="rfc.section.6.2">
-<a href="#rfc.section.6.2">6.2.</a> User Notification</h1>
-<p id="rfc.section.6.2.p.1">Users should be notified, by both the Recovery Provider and Account Provider, whenever a recovery capability is exercised, in order to provide an opportunity to react if they did not initiate the action.  Out-of-band means (email, instant message, SMS, etc.) should be preferred to reduce the opportunity for an attacker in control of a user's account to remove such signals.</p>
-<h1 id="rfc.section.6.3">
-<a href="#rfc.section.6.3">6.3.</a> Additional Verification</h1>
-<h1 id="rfc.section.6.3.1">
-<a href="#rfc.section.6.3.1">6.3.1.</a> At the Recovery Provider</h1>
-<p id="rfc.section.6.3.1.p.1">An explicit goal of this specification is that account recovery operations can be explicitly recognized as high-risk operations and subject to additional authentication controls by a Recovery Provider. Recovery Providers should treat the exercising of a recovery capability as a high risk action and require a high degree of confidence in the user's authentication to perform it. The nature of this is application-specific at each Recovery Provider.</p>
-<h1 id="rfc.section.6.3.1.1">
-<a href="#rfc.section.6.3.1.1">6.3.1.1.</a> Session Fixation</h1>
-<p id="rfc.section.6.3.1.1.p.1">To achieve a convenient and privacy-preserving user experience many Recovery Providers will rely on the ambient authority of the user's browser (e.g. cookies) to associate a recovery token to their account. If an attacker can execute a session fixation attack on a user, in which the user is unknowingly logged out of their account and logged in to a different account under the control of an attacker (e.g. through a logout/login CSRF attack), and then convince the user to save an account recovery token, the attacker may be able to use that to take control of the account for which the token grants a recovery capability.</p>
-<p id="rfc.section.6.3.1.1.p.2">To mitigate this risk, Recovery Providers should take precautions to prevent Cross-Site Request Forgery against login/logout endpoints. Recovery Providers may also wish to track, for example through persistent cookies, which user agents have been used with multiple accounts, and require additional confirmation that the user is aware of the current logged in user state before saving a recovery token.</p>
-<h1 id="rfc.section.6.3.2">
-<a href="#rfc.section.6.3.2">6.3.2.</a> At the Account Provider</h1>
-<p id="rfc.section.6.3.2.p.1">This specification does not mandate that a counter-signed recovery token be the exclusive means by which an Account Provider allows restoring control or resetting the credentials of an account. They may treat it as only one authentication signal among many possible or necessary ones. Resetting a high-value account might require, e.g. multiple instances of this protocol to be completed with independent Recovery Providers, or make use of additional authentication factors exclusively at the Account Provider.</p>
-<p id="rfc.section.6.3.2.p.2">Whether to accept or reject a presented counter-signed recovery token is always at the discretion of the Account Provider. Use of this protocol does not imply any contract or obligation to honor any previously saved recovery capability.</p>
-<p id="rfc.section.6.3.2.p.3">The opaque data field can be also be used to encapsulate additional information to use in strengthening the process. For example, a traditional account recovery "secret question" and its answer might be encoded into this data. This implementation reduces many of the risks of such questions, as they cannot be seen or brute-force guessed by an attacker that has not already compromised the user's account at the Recovery Provider, and the content of such question / answer sets cannot leak through a data breach at either the Recovery or Account Provider individually.</p>
-<p id="rfc.section.6.3.2.p.4">If a user recovers their account following a period of compromise, the Account Provider should take precautions to invalidate any new recovery tokens that may have been issued during the compromise period.</p>
-<h1 id="rfc.section.6.4">
-<a href="#rfc.section.6.4">6.4.</a> Low Friction Tokens and Delegated Multi-Factor Authentication</h1>
-<p id="rfc.section.6.4.p.1">Generally, recovering an account is a high-security event, and a key advantage of this protocol is that it identifies recoveries explicitly, so they may have appropriate re-authentication and rate limiting applied by a Recovery Provider.</p>
-<p id="rfc.section.6.4.p.2">However, the ability to anonymously attest continuity of control of an account at an external source has other uses beyond recovering account using this protocol as the sole source of evidence.</p>
-<p id="rfc.section.6.4.p.3">If an Account Provider sets the "Low Friction" bit in the token options bitflag, it is indicating to the Recovery Provider that the token will not be treated as a single authentication factor, and so request that ease of use in "recovery" be prioritized over additional security measures or strict rate limting.  In this mode, the protcol may be used as a generalized part of a multi-factor authentication solution, replacing solutions like one-time passwords with a decentralized mesh of user accounts.</p>
-<p id="rfc.section.6.4.p.4">When a Recovery Provider receives a token with the Low Friction flag set, it SHOULD adjust rate limts and re-authentication strategies to prioritize user success and ease of use above the level of authentication assurance.  It SHOULD then set the same flag in the Countersigned Token it issues.</p>
-<p id="rfc.section.6.4.p.5">Additionally, a Recovery Provider MAY use the Low Friction flag in a Countersigned Token to indicate to an Account Provider that, despite best efforts for a Recovery Token where the Low Friction flag was not set, a strong level of authentication assurance was not possible.  It is at the discretion of the Recovery Provider exactly what this means, but suggested that this flag be set when the level of authentication possible was no stronger than username/password.  This SHOULD only be used when stronger challenges are not available due to the configuration of the account at the Recovery Provider.  If a strong authentication challenge was available but could not be completed, the Recovery Provider should not issue a Countersigned Token.</p>
-<h1 id="rfc.section.6.5">
-<a href="#rfc.section.6.5">6.5.</a> Cross-Site Request Forgery</h1>
-<p id="rfc.section.6.5.p.1">Many web application endpoints require an unforgeable token be sent as part of any HTTP POST to prevent Cross-Site Request Forgery (CSRF) attacks from abusing the ambient authority represented by cookies or other implicit credentials sent by a web user agent.</p>
-<p id="rfc.section.6.5.p.2">Because the architecture of Delegated Account Recovery relies on deliberate cross-origin POSTs, normal protections of this sort cannot be applied to the endpoints specified by this specification.</p>
-<p id="rfc.section.6.5.p.3">To prevent abuse, both Account and Recovery Providers should require explicit user confirmation of actions in pages that contain anti-automation measures, e.g. by setting an X-Frame-Options header <a href="#RFC7034" class="xref">[RFC7034]</a> or Content-Security-Policy "frame-ancestors" directive to prevent clickjacking attacks.</p>
-<p id="rfc.section.6.5.p.4">Initiating sending a recovery token to a recovery provider should be protected against Cross-Site Request Forgery and clickjacking, to prevent users being tricked into sending tokens to fraudulent providers. Account Providers may want to take special measures to require unforgeable user consent or block entirely the delegation of tokens to low-reputation Recovery Providers.</p>
-<h1 id="rfc.section.6.6">
-<a href="#rfc.section.6.6">6.6.</a> Breach Detection</h1>
-<p id="rfc.section.6.6.p.1">Participants should monitor rates at which recovery capabilities are exercised and rates at which users report unauthorized exercising of recovery capabilities. A high rate of unauthorized recovery actions initiated at a given Recovery Provider may indicate a compromised or malicious provider. Both Recovery and Account Providers should publish contact information for use in incident reporting and response. Verification of token bindings and issued_time freshness should also be performed to prevent disclosed tokens from being re-associated to new accounts at a Recovery Provider.</p>
-<h1 id="rfc.section.6.7">
-<a href="#rfc.section.6.7">6.7.</a> Clock Skew</h1>
-<p id="rfc.section.6.7.p.1">This protocol relies on comparison of timestamps from different network servers as a defense-in-depth measure to prevent re-use of leaked tokens, in particular re-association of a leaked token with a different account at the same audience server. Although client clock skews are a frequent issue for protocols with such dependencies, this protocol only depends on reasonable clock synchronization between servers, never the user-managed client clock. Participating servers in this protocol should endeavor to issue tokens as close in time to when they will be transmitted as possible and should take steps to reduce their own clock skew, for example, by periodic synchronization with standardized Internet time sources. The specifics of such mechanisms are beyond the scope of this document.</p>
-<h1 id="rfc.section.6.8">
-<a href="#rfc.section.6.8">6.8.</a> Key Loss and Compromise</h1>
-<p id="rfc.section.6.8.p.1">This protocol involves three keys: the public/private key pairs of the Account and Recovery Providers, and whatever key the Account Provider uses to encrypt the opaque data. Additionally, the recovery tokens themselves convey some security capability. The protocol can offer some resilience to loss or compromise of these keys and artifacts.</p>
-<p id="rfc.section.6.8.p.2">If the Recovery Provider's key is compromised, it should publicize the window in which it was compromised, and should notify Account Providers with whom recovery capabilities were exercised during the window of compromise. Mechanisms to communicate this are outside the scope of this protocol. If notified by a Recovery Provider of a key compromise, Account Providers should identify recovery capabilities exercised from that provider during the window of compromise and perform additional diligence for the security of those accounts.  Generally, if only the Recovery Provider's key is compromised, but not the Recovery Provider's other infrastructure around this protocol (e.g. if a key was generated using weak entropy but other operational procedures were sound) then no attack is possible, since an attacker must have both a genuine recovery token and the counter-signing key to take over a user's account. Rotation of the published key is sufficient to restore trust for the purposes of this protocol. Stored recovery tokens do not need to be re-issued.</p>
-<p id="rfc.section.6.8.p.3">If a set of recovery tokens leak from a Recovery Provider, they do not convey any capability without also being countersigned by the Recovery Provider's key, and they by themselves convey no personally identifying information about the account to which they apply.  So long as the Recovery Provider's published key remains secure, leaked recovery tokens do not need to be distrusted or re-issued.  Verification of token bindings and refusal of tokens with a stale <samp>issued_time</samp> prior to saving any recovery token can prevent leaked tokens from being re-added to different accounts under an attacker's control at the same Recovery Provider.</p>
-<p id="rfc.section.6.8.p.4">If an Account Provider loses control of only its token signing key, this conveys limited capabilities to the attacker. It can cause false tokens to be stored by a Recovery Provider, but only at an account it also controls at the Recovery Provider, and will not have the ability to forge the opaque data. To ensure this resistance, the opaque data field should be encrypted using an AEAD mode or other encrypt-then-MAC construction to prevent it from being malleable.</p>
-<p id="rfc.section.6.8.p.5">If an Account Provider loses its data encryption keys, tokens issued under those keys will be unusable.</p>
-<h1 id="rfc.section.6.9">
-<a href="#rfc.section.6.9">6.9.</a> TLS or HTTPS Certificate Compromise</h1>
-<p id="rfc.section.6.9.p.1">This protocol depends on TLS, HTTPS and the Web PKI to bootstrap its self-organizing trust framework using HTTPS to distribute keys.  Because end-users' communication with the network service providers in question, including transmission of credentials and session management material, also are almost always dependent on TLS and the HTTPS Web PKI, there is little value in attempting to eliminate this as part of the trusted computing base for this specification.</p>
-<p id="rfc.section.6.9.p.2">Account and Recovery Providers should be cautious in the management of the root certification authorities they trust when performing configuration discovery operations over HTTPS, should use the latest practical TLS version and should terminate the protocol without user recourse if any errors are encountered. Participants may want to employ additional means to reduce the risk of compromised HTTPS connections that are beyond the scope of this document, such as HTTP Public Key Pinning <a href="#RFC7469" class="xref">[RFC7469]</a> and Certificate Transparency. <a href="#RFC6962" class="xref">[RFC6962]</a></p>
-<h1 id="rfc.section.6.10">
-<a href="#rfc.section.6.10">6.10.</a> Token Leakage</h1>
-<p id="rfc.section.6.10.p.1">It may be possible that recovery tokens leak to third parties.  Use of the POST method and endpoints which are either well-known or discovered from the configuration are intended as countermeasures.</p>
-<p id="rfc.section.6.10.p.2">Protocol participants should take additional precautions against token leaks in their application-specific logic, such as avoiding moving tokens from POST to GET parameters in cleartext during a login flow prior to saving a token.</p>
-<p id="rfc.section.6.10.p.3">Use of a token binding can reduce these risks.</p>
+<a href="#rfc.section.6">6.</a> Use in Key Recovery</h1>
+<p id="rfc.section.6.p.1">This protocol, in addition to allowing recovery of accounts in a delegated fashion, may be used to recover other capabilities, like a recovery key for encrypted email or files. For example, the provider of a an encryption service might use a threshold cryptosystem to break a key into several parts, and ask the user to store the pieces (encoded in the opaque data field) as account recovery tokens at several providers. If the user loses their own copy of the key, they can still recover it, but the backup is not subject to server-side compromise by any single entity.</p>
 <h1 id="rfc.section.7">
-<a href="#rfc.section.7">7.</a> Implementation Notes</h1>
-<p id="rfc.section.7.p.1">This section is non-normative.</p>
-<p id="rfc.section.7.p.2">Software platforms may represent Elliptic Curve public keys differently. The configuration encoding required by this specification is the format used by OpenSSL's Elliptic Curve implementation (X9.62 / RFC 3280), which uses the alias "prime256v1" to refer to the NIST secp256r1 curve. Some software only expects a "raw" ECPoint representation as a public key. If your software's EC public key representation is 65 octets long and begins with 0x04, this is a raw ECPoint. Because they are of fixed length, these raw points can be converted to the ASN.1 encoded form required by this specification by simply prefixing the following 26 octets to the buffer:</p>
+<a href="#rfc.section.7">7.</a> Security Considerations</h1>
+<h1 id="rfc.section.7.1">
+<a href="#rfc.section.7.1">7.1.</a> Deterministic Use of ECDSA</h1>
+<p id="rfc.section.7.1.p.1">Even slight biases in the selection of the random value k used by ECDSA can lead to a key compromise.  As such, implementers SHOULD follow the method described in <a href="#RFC5246" class="xref">[RFC5246]</a> for generating deterministic values of k.</p>
+<h1 id="rfc.section.7.2">
+<a href="#rfc.section.7.2">7.2.</a> User Notification</h1>
+<p id="rfc.section.7.2.p.1">Users should be notified, by both the Recovery Provider and Account Provider, whenever a recovery capability is exercised, in order to provide an opportunity to react if they did not initiate the action.  Out-of-band means (email, instant message, SMS, etc.) should be preferred to reduce the opportunity for an attacker in control of a user's account to remove such signals.</p>
+<h1 id="rfc.section.7.3">
+<a href="#rfc.section.7.3">7.3.</a> Additional Verification</h1>
+<h1 id="rfc.section.7.3.1">
+<a href="#rfc.section.7.3.1">7.3.1.</a> At the Recovery Provider</h1>
+<p id="rfc.section.7.3.1.p.1">An explicit goal of this specification is that account recovery operations can be explicitly recognized as high-risk operations and subject to additional authentication controls by a Recovery Provider. Recovery Providers should treat the exercising of a recovery capability as a high risk action and require a high degree of confidence in the user's authentication to perform it. The nature of this is application-specific at each Recovery Provider.</p>
+<h1 id="rfc.section.7.3.1.1">
+<a href="#rfc.section.7.3.1.1">7.3.1.1.</a> Session Fixation</h1>
+<p id="rfc.section.7.3.1.1.p.1">To achieve a convenient and privacy-preserving user experience many Recovery Providers will rely on the ambient authority of the user's browser (e.g. cookies) to associate a recovery token to their account. If an attacker can execute a session fixation attack on a user, in which the user is unknowingly logged out of their account and logged in to a different account under the control of an attacker (e.g. through a logout/login CSRF attack), and then convince the user to save an account recovery token, the attacker may be able to use that to take control of the account for which the token grants a recovery capability.</p>
+<p id="rfc.section.7.3.1.1.p.2">To mitigate this risk, Recovery Providers should take precautions to prevent Cross-Site Request Forgery against login/logout endpoints. Recovery Providers may also wish to track, for example through persistent cookies, which user agents have been used with multiple accounts, and require additional confirmation that the user is aware of the current logged in user state before saving a recovery token.</p>
+<h1 id="rfc.section.7.3.2">
+<a href="#rfc.section.7.3.2">7.3.2.</a> At the Account Provider</h1>
+<p id="rfc.section.7.3.2.p.1">This specification does not mandate that a counter-signed recovery token be the exclusive means by which an Account Provider allows restoring control or resetting the credentials of an account. They may treat it as only one authentication signal among many possible or necessary ones. Resetting a high-value account might require, e.g. multiple instances of this protocol to be completed with independent Recovery Providers, or make use of additional authentication factors exclusively at the Account Provider.</p>
+<p id="rfc.section.7.3.2.p.2">Whether to accept or reject a presented counter-signed recovery token is always at the discretion of the Account Provider. Use of this protocol does not imply any contract or obligation to honor any previously saved recovery capability.</p>
+<p id="rfc.section.7.3.2.p.3">The opaque data field can be also be used to encapsulate additional information to use in strengthening the process. For example, a traditional account recovery "secret question" and its answer might be encoded into this data. This implementation reduces many of the risks of such questions, as they cannot be seen or brute-force guessed by an attacker that has not already compromised the user's account at the Recovery Provider, and the content of such question / answer sets cannot leak through a data breach at either the Recovery or Account Provider individually.</p>
+<p id="rfc.section.7.3.2.p.4">If a user recovers their account following a period of compromise, the Account Provider should take precautions to invalidate any new recovery tokens that may have been issued during the compromise period.</p>
+<h1 id="rfc.section.7.4">
+<a href="#rfc.section.7.4">7.4.</a> Low Friction Tokens and Delegated Multi-Factor Authentication</h1>
+<p id="rfc.section.7.4.p.1">Generally, recovering an account is a high-security event, and a key advantage of this protocol is that it identifies recoveries explicitly, so they may have appropriate re-authentication and rate limiting applied by a Recovery Provider.</p>
+<p id="rfc.section.7.4.p.2">However, the ability to anonymously attest continuity of control of an account at an external source has other uses beyond recovering account using this protocol as the sole source of evidence.</p>
+<p id="rfc.section.7.4.p.3">If an Account Provider sets the "Low Friction" bit in the token options bitflag, it is indicating to the Recovery Provider that the token will not be treated as a single authentication factor, and so request that ease of use in "recovery" be prioritized over additional security measures or strict rate limting.  In this mode, the protcol may be used as a generalized part of a multi-factor authentication solution, replacing solutions like one-time passwords with a decentralized mesh of user accounts.</p>
+<p id="rfc.section.7.4.p.4">When a Recovery Provider receives a token with the Low Friction flag set, it SHOULD adjust rate limts and re-authentication strategies to prioritize user success and ease of use above the level of authentication assurance.  It SHOULD then set the same flag in the Countersigned Token it issues.</p>
+<p id="rfc.section.7.4.p.5">Additionally, a Recovery Provider MAY use the Low Friction flag in a Countersigned Token to indicate to an Account Provider that, despite best efforts for a Recovery Token where the Low Friction flag was not set, a strong level of authentication assurance was not possible.  It is at the discretion of the Recovery Provider exactly what this means, but suggested that this flag be set when the level of authentication possible was no stronger than username/password.  This SHOULD only be used when stronger challenges are not available due to the configuration of the account at the Recovery Provider.  If a strong authentication challenge was available but could not be completed, the Recovery Provider should not issue a Countersigned Token.</p>
+<h1 id="rfc.section.7.5">
+<a href="#rfc.section.7.5">7.5.</a> Cross-Site Request Forgery</h1>
+<p id="rfc.section.7.5.p.1">Many web application endpoints require an unforgeable token be sent as part of any HTTP POST to prevent Cross-Site Request Forgery (CSRF) attacks from abusing the ambient authority represented by cookies or other implicit credentials sent by a web user agent.</p>
+<p id="rfc.section.7.5.p.2">Because the architecture of Delegated Account Recovery relies on deliberate cross-origin POSTs, normal protections of this sort cannot be applied to the endpoints specified by this specification.</p>
+<p id="rfc.section.7.5.p.3">To prevent abuse, both Account and Recovery Providers should require explicit user confirmation of actions in pages that contain anti-automation measures, e.g. by setting an X-Frame-Options header <a href="#RFC7034" class="xref">[RFC7034]</a> or Content-Security-Policy "frame-ancestors" directive to prevent clickjacking attacks.</p>
+<p id="rfc.section.7.5.p.4">Initiating sending a recovery token to a recovery provider should be protected against Cross-Site Request Forgery and clickjacking, to prevent users being tricked into sending tokens to fraudulent providers. Account Providers may want to take special measures to require unforgeable user consent or block entirely the delegation of tokens to low-reputation Recovery Providers.</p>
+<h1 id="rfc.section.7.6">
+<a href="#rfc.section.7.6">7.6.</a> Breach Detection</h1>
+<p id="rfc.section.7.6.p.1">Participants should monitor rates at which recovery capabilities are exercised and rates at which users report unauthorized exercising of recovery capabilities. A high rate of unauthorized recovery actions initiated at a given Recovery Provider may indicate a compromised or malicious provider. Both Recovery and Account Providers should publish contact information for use in incident reporting and response. Verification of token bindings and issued_time freshness should also be performed to prevent disclosed tokens from being re-associated to new accounts at a Recovery Provider.</p>
+<h1 id="rfc.section.7.7">
+<a href="#rfc.section.7.7">7.7.</a> Clock Skew</h1>
+<p id="rfc.section.7.7.p.1">This protocol relies on comparison of timestamps from different network servers as a defense-in-depth measure to prevent re-use of leaked tokens, in particular re-association of a leaked token with a different account at the same audience server. Although client clock skews are a frequent issue for protocols with such dependencies, this protocol only depends on reasonable clock synchronization between servers, never the user-managed client clock. Participating servers in this protocol should endeavor to issue tokens as close in time to when they will be transmitted as possible and should take steps to reduce their own clock skew, for example, by periodic synchronization with standardized Internet time sources. The specifics of such mechanisms are beyond the scope of this document.</p>
+<h1 id="rfc.section.7.8">
+<a href="#rfc.section.7.8">7.8.</a> Key Loss and Compromise</h1>
+<p id="rfc.section.7.8.p.1">This protocol involves three keys: the public/private key pairs of the Account and Recovery Providers, and whatever key the Account Provider uses to encrypt the opaque data. Additionally, the recovery tokens themselves convey some security capability. The protocol can offer some resilience to loss or compromise of these keys and artifacts.</p>
+<p id="rfc.section.7.8.p.2">If the Recovery Provider's key is compromised, it should publicize the window in which it was compromised, and should notify Account Providers with whom recovery capabilities were exercised during the window of compromise. Mechanisms to communicate this are outside the scope of this protocol. If notified by a Recovery Provider of a key compromise, Account Providers should identify recovery capabilities exercised from that provider during the window of compromise and perform additional diligence for the security of those accounts.  Generally, if only the Recovery Provider's key is compromised, but not the Recovery Provider's other infrastructure around this protocol (e.g. if a key was generated using weak entropy but other operational procedures were sound) then no attack is possible, since an attacker must have both a genuine recovery token and the counter-signing key to take over a user's account. Rotation of the published key is sufficient to restore trust for the purposes of this protocol. Stored recovery tokens do not need to be re-issued.</p>
+<p id="rfc.section.7.8.p.3">If a set of recovery tokens leak from a Recovery Provider, they do not convey any capability without also being countersigned by the Recovery Provider's key, and they by themselves convey no personally identifying information about the account to which they apply.  So long as the Recovery Provider's published key remains secure, leaked recovery tokens do not need to be distrusted or re-issued.  Verification of token bindings and refusal of tokens with a stale <samp>issued_time</samp> prior to saving any recovery token can prevent leaked tokens from being re-added to different accounts under an attacker's control at the same Recovery Provider.</p>
+<p id="rfc.section.7.8.p.4">If an Account Provider loses control of only its token signing key, this conveys limited capabilities to the attacker. It can cause false tokens to be stored by a Recovery Provider, but only at an account it also controls at the Recovery Provider, and will not have the ability to forge the opaque data. To ensure this resistance, the opaque data field should be encrypted using an AEAD mode or other encrypt-then-MAC construction to prevent it from being malleable.</p>
+<p id="rfc.section.7.8.p.5">If an Account Provider loses its data encryption keys, tokens issued under those keys will be unusable.</p>
+<h1 id="rfc.section.7.9">
+<a href="#rfc.section.7.9">7.9.</a> TLS or HTTPS Certificate Compromise</h1>
+<p id="rfc.section.7.9.p.1">This protocol depends on TLS, HTTPS and the Web PKI to bootstrap its self-organizing trust framework using HTTPS to distribute keys.  Because end-users' communication with the network service providers in question, including transmission of credentials and session management material, also are almost always dependent on TLS and the HTTPS Web PKI, there is little value in attempting to eliminate this as part of the trusted computing base for this specification.</p>
+<p id="rfc.section.7.9.p.2">Account and Recovery Providers should be cautious in the management of the root certification authorities they trust when performing configuration discovery operations over HTTPS, should use the latest practical TLS version and should terminate the protocol without user recourse if any errors are encountered. Participants may want to employ additional means to reduce the risk of compromised HTTPS connections that are beyond the scope of this document, such as HTTP Public Key Pinning <a href="#RFC7469" class="xref">[RFC7469]</a> and Certificate Transparency. <a href="#RFC6962" class="xref">[RFC6962]</a></p>
+<h1 id="rfc.section.7.10">
+<a href="#rfc.section.7.10">7.10.</a> Token Leakage</h1>
+<p id="rfc.section.7.10.p.1">It may be possible that recovery tokens leak to third parties.  Use of the POST method and endpoints which are either well-known or discovered from the configuration are intended as countermeasures.</p>
+<p id="rfc.section.7.10.p.2">Protocol participants should take additional precautions against token leaks in their application-specific logic, such as avoiding moving tokens from POST to GET parameters in cleartext during a login flow prior to saving a token.</p>
+<p id="rfc.section.7.10.p.3">Use of a token binding can reduce these risks.</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> Implementation Notes</h1>
+<p id="rfc.section.8.p.1">This section is non-normative.</p>
+<p id="rfc.section.8.p.2">Software platforms may represent Elliptic Curve public keys differently. The configuration encoding required by this specification is the format used by OpenSSL's Elliptic Curve implementation (X9.62 / RFC 3280), which uses the alias "prime256v1" to refer to the NIST secp256r1 curve. Some software only expects a "raw" ECPoint representation as a public key. If your software's EC public key representation is 65 octets long and begins with 0x04, this is a raw ECPoint. Because they are of fixed length, these raw points can be converted to the ASN.1 encoded form required by this specification by simply prefixing the following 26 octets to the buffer:</p>
 <pre>
 [48, 89, 48, 19, 6, 7, 42, 134, 72, 206, 61, 2, 1, 6, 8, 42, 134, 72, 206,
 61, 3, 1, 7, 3, 66, 0]
 
 </pre>
-<h1 id="rfc.section.8">
-<a href="#rfc.section.8">8.</a> IANA Considerations</h1>
-<p id="rfc.section.8.p.1">Future revisions to this protocol may use a registry to map supported cryptographic algorithms to the token version indiator.</p>
 <h1 id="rfc.section.9">
-<a href="#rfc.section.9">9.</a> Acknowledgements</h1>
-<p id="rfc.section.9.p.1">The author would like to thank Andrey Labunets, Neil Matatall and Patrick Toomey for their valuable contributions.</p>
+<a href="#rfc.section.9">9.</a> IANA Considerations</h1>
+<p id="rfc.section.9.p.1">Future revisions to this protocol may use a registry to map supported cryptographic algorithms to the token version indiator.</p>
+<h1 id="rfc.section.10">
+<a href="#rfc.section.10">10.</a> Acknowledgements</h1>
+<p id="rfc.section.10.p.1">The author would like to thank Andrey Labunets, Neil Matatall and Patrick Toomey for their valuable contributions.</p>
 <h1 id="rfc.references">
-<a href="#rfc.references">10.</a> Normative References</h1>
+<a href="#rfc.references">11.</a> Normative References</h1>
 <table><tbody>
 <tr>
 <td class="reference"><b id="ISO.8601.1988">[ISO.8601.1988]</b></td>
